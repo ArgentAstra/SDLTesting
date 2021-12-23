@@ -6,7 +6,55 @@
 //stdio for general console use
 #include <stdio.h>
 
+//window class file
+#include "Window.h"
 
+//establish a window
+Window* window = nullptr;
+
+// hacky C back-compat argument passing becuase we just HAD to have arguments for MAIN... buncha dorks
+int main(int argc, char* argv[])
+{
+	//get relevant values. currently mostly set temps, will be stored in an options file later
+	bool Vulkan = true;
+	bool Fullscreen = false;
+	bool borderlessWindow = false;
+	bool VSync = true;
+	bool HWAccel = true;
+
+	//create the window and initialize. 
+	window = new Window();
+	window->init("test engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 500, Vulkan, Fullscreen, borderlessWindow, VSync, HWAccel);
+
+
+	//while loop
+	while (window->isRunning())
+	{
+		window->handleEvents();
+		window->update();
+		window->render();
+	}
+
+	//exit
+	window->clean();
+
+	//bye bye beh beh
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*///////////////////////////////////////////// INITIAL TEST CODE, KEPT FOR POSTERITY \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*\
+-------------------------------------------------------------------------------------------------------------------------------------
 
 // hacky C back-compat argument passing becuase we just HAD to have arguments for MAIN... buncha dorks
 int main(int argc, char* argv[])
@@ -20,7 +68,7 @@ int main(int argc, char* argv[])
 	// make a window and create the window seperately. Because we're not barbarians, y'all. We can seperate ATOMS we can seperate our declarations.
 	SDL_Window* window;
 	
-	window = SDL_CreateWindow("Testing Stuff", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 500, SDL_WINDOW_VULKAN);
+	window = SDL_CreateWindow("Testing Stuff", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 500, SDL_WINDOW_RESIZABLE | SDL_WINDOW_VULKAN);
 
 	// error catching. SDL_GetError pushes the last error given as a string, so IF window is still null then there must be an error, so grab it
 	if (window == NULL)
@@ -35,7 +83,7 @@ int main(int argc, char* argv[])
 
 	// error catching again
 	if (renderer == NULL)
-		printf("Renderer Failed, Error: %S", SDL_GetError());
+		printf("Renderer Failed, Error: %s", SDL_GetError());
 
 
 
@@ -68,3 +116,6 @@ int main(int argc, char* argv[])
 	//exit
 	return 0;
 }
+
+-------------------------------------------------------------------------------------------------------------------------------------
+\*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_______________________________________/////////////////////////////////////////////*/
