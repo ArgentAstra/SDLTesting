@@ -21,7 +21,7 @@ void Window::init(const char* title, int x, int y, int w, int h, bool Vulkan, bo
 	
 	//fullscreen and borderless aren't compatable, so if/else them
 	if (Fullscreen)
-		wflags = wflags | SDL_WINDOW_FULLSCREEN;
+		wflags = wflags | SDL_WINDOW_FULLSCREEN_DESKTOP;
 	else if (borderlessWindow)
 		wflags = wflags | SDL_WINDOW_BORDERLESS;
 
@@ -90,8 +90,20 @@ void Window::init(const char* title, int x, int y, int w, int h, bool Vulkan, bo
 
 
 		//do some basics so she can be seen
-		SDL_SetRenderDrawColor(renderer, 0x33, 0x33, 0x88, 0xFF);
+		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
+
+		//load the player texture
+		SDL_Surface* tempSurface = IMG_Load("Archer.png");
+		PlrTex = SDL_CreateTextureFromSurface(renderer, tempSurface);
+		SDL_FreeSurface(tempSurface);
+
+	
 	}
+
+	//testing stuff Below this Line
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	DestR.x = 2;
+
 }
 
 //the magic of stuff happening, managed by checking a million things
@@ -117,10 +129,52 @@ void Window::handleEvents()
 //update engine states
 void Window::update()
 {
+
+	//grab window size
+	SDL_GetWindowSize(window, &WindowW, &WindowH);
+
+	
+
+	//testing stuff Below this Line
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	DestR.h = 64;
+	DestR.w = 32;
+
+	//now she moves
+	//horiz
+	if (DestR.x+DestR.w >= WindowW)
+		moveLeft = true;
+	else if (DestR.x <= 0)
+		moveLeft = false;
+	
+	if (moveLeft)
+		DestR.x--;
+	else
+		DestR.x++;
+
+	//vert
+	if (DestR.y + DestR.h >= WindowH)
+		moveUp = true;
+	else if (DestR.y <= 0)
+		moveUp = false;
+
+	if (moveUp)
+		DestR.y--;
+	else
+		DestR.y++;
+
 	//counter for confirming it works
-	counter++;
-	printf("%i\n", counter);
-	//todo
+	//..counter++;
+	//..printf("%i\n", counter);
+}
+
+//loads an image into memory as a surface
+void Window::loadImage(int target, std::string filename)
+{
+	if (target == 1)
+	{
+
+	}
 }
 
 //iterate on the renderer
@@ -129,7 +183,8 @@ void Window::render()
 	//clear up our renderer then do stuff
 	SDL_RenderClear(renderer);
 
-	//eventually we'll have stuff here
+	//do magic
+	SDL_RenderCopy(renderer, PlrTex, NULL, &DestR);
 
 	//actually do the thing
 	SDL_RenderPresent(renderer);

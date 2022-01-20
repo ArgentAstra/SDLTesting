@@ -16,7 +16,7 @@ Window* window = nullptr;
 int main(int argc, char* argv[])
 {
 	//get relevant values. currently mostly set temps, will be stored in an options file later
-	bool Vulkan = true;
+	bool Vulkan = false;
 	bool Fullscreen = false;
 	bool borderlessWindow = false;
 	bool VSync = true;
